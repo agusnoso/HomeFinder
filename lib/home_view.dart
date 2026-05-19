@@ -8,7 +8,7 @@ class HomeView extends StatelessWidget {
 
   // Rol simulado de momento.
   // Más adelante este valor vendrá desde Supabase.
-  final String rolUsuario = 'propietario';
+  final String rolUsuario = 'huesped';
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class HomeView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              esPropietario ? 'Modo Propietario' : 'Modo Huésped',
+              esPropietario ? 'Modo Propietario' : 'Modo Huesped',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey[700],
