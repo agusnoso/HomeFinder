@@ -24,7 +24,6 @@ class _SignInViewState extends State<SignInView> {
   final TextEditingController _passController = TextEditingController();
   final formWidgets = FormWidgets();
 
-  bool _rememberMe = false;
   bool _isHidden = true;
 
   @override
@@ -57,9 +56,6 @@ class _SignInViewState extends State<SignInView> {
 
     // Save the username globally.
     context.read<UserProvider>().setUsername(username);
-
-    // Optionally persist credentials if rememberMe is true. Implementation
-    // omitted for brevity.
 
     // Navigate to the home page.
     if (context.mounted) {
@@ -103,38 +99,6 @@ class _SignInViewState extends State<SignInView> {
                   _passController,
                   _isHidden,
                   _togglePasswordVisibility,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          activeColor: Colors.red,
-                          value: _rememberMe,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _rememberMe = value ?? false;
-                            });
-                          },
-                        ),
-                        const Text('Recordar'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Implementar recuperación de contraseña si es necesario.
-                      },
-                      child: const Text(
-                        '¿Olvidó la contraseña?',
-                        style: TextStyle(
-                          color: Color(0xFF4d81e7),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
