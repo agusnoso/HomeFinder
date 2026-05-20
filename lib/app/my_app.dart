@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'sign_in.dart';
-import 'home_view.dart';
+import '../presentation/screens/auth/sign_in.dart';
+import '../presentation/screens/home/home_view.dart';
 
 /// Root widget for the login project.
 ///
