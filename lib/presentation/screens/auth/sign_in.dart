@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'form_widgets.dart';
-import 'user_provider.dart';
+import '../../widgets/form_widgets.dart';
+import '../../providers/user_provider.dart';
 
 /// Login screen with user and password fields only.
 ///
