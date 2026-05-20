@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 
-/// Simple provider to hold the logged in username.
-///
-/// The original project used separate providers for the user and domain.
-/// Since the domain field has been removed, this provider only tracks
-/// the username. Additional fields (such as tokens) could be added later.
 class UserProvider extends ChangeNotifier {
   String _username = '';
+  String _role = 'huesped';
 
-  /// Returns the currently logged in username.
   String get username => _username;
+  String get role => _role;
 
-  /// Updates the stored username and notifies listeners.
   void setUsername(String username) {
     _username = username;
+    notifyListeners();
+  }
+
+  void setRole(String role) {
+    _role = role;
+    notifyListeners();
+  }
+
+  void setUserData({required String username, required String role}) {
+    _username = username;
+    _role = role;
+    notifyListeners();
+  }
+
+  void clearUserData() {
+    _username = '';
+    _role = 'huesped';
     notifyListeners();
   }
 }

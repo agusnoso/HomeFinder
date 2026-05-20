@@ -6,13 +6,11 @@ import '../../providers/user_provider.dart';
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  // Rol simulado de momento.
-  // Más adelante este valor vendrá desde Supabase.
-  final String rolUsuario = 'huesped';
-
   @override
   Widget build(BuildContext context) {
-    final username = context.watch<UserProvider>().username;
+    final userProvider = context.watch<UserProvider>();
+    final username = userProvider.username;
+    final rolUsuario = userProvider.role;
 
     final bool esPropietario = rolUsuario == 'propietario';
     final bool esHuesped = rolUsuario == 'huesped';
@@ -42,6 +40,8 @@ class HomeView extends StatelessWidget {
               }
 
               if (value == 'logout') {
+                context.read<UserProvider>().clearUserData();
+
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/',

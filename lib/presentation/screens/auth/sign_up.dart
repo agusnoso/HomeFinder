@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -41,6 +44,11 @@ class _SignUpViewState extends State<SignUpView> {
     // TODO: conectar registro real con Supabase Auth.
     // TODO: guardar el rol del usuario en la base de datos.
 
+    context.read<UserProvider>().setUserData(
+      username: username,
+      role: _selectedRole,
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -49,6 +57,7 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
 
+    Navigator.pushReplacementNamed(context, '/home');
     Navigator.pop(context);
   }
 
