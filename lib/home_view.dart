@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'user_provider.dart';
 
+import 'sign_in.dart';
+
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
