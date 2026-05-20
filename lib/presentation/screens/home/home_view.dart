@@ -111,25 +111,29 @@ class HomeView extends StatelessWidget {
                 icon: Icons.add_home,
                 title: 'Publicar vivienda',
                 subtitle: 'Añade una vivienda en alquiler o venta',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/owner/publish-property'),
               ),
               _HomeOptionCard(
                 icon: Icons.home_work,
                 title: 'Mis viviendas',
                 subtitle: 'Consulta y gestiona tus inmuebles publicados',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/owner/my-properties'),
               ),
               _HomeOptionCard(
                 icon: Icons.assignment,
                 title: 'Solicitudes recibidas',
                 subtitle: 'Revisa las solicitudes de los huéspedes',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/owner/requests'),
               ),
               _HomeOptionCard(
                 icon: Icons.message,
                 title: 'Mensajes',
                 subtitle: 'Comunícate con los huéspedes interesados',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/owner/messages'),
               ),
             ],
 
@@ -138,25 +142,29 @@ class HomeView extends StatelessWidget {
                 icon: Icons.search,
                 title: 'Buscar viviendas',
                 subtitle: 'Encuentra viviendas disponibles',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/guest/search-properties'),
               ),
               _HomeOptionCard(
                 icon: Icons.apartment,
                 title: 'Viviendas disponibles',
                 subtitle: 'Consulta inmuebles en alquiler o venta',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/guest/available-properties'),
               ),
               _HomeOptionCard(
                 icon: Icons.list_alt,
                 title: 'Mis solicitudes',
                 subtitle: 'Revisa las solicitudes que has enviado',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/guest/requests'),
               ),
               _HomeOptionCard(
                 icon: Icons.message,
                 title: 'Mensajes',
                 subtitle: 'Comunícate con propietarios',
-                onTap: () {},
+                onTap:
+                    () => Navigator.pushNamed(context, '/guest/messages'),
               ),
             ],
           ],
