@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'my_app.dart';
-import 'user_provider.dart';
+import 'app/my_app.dart';
+import 'presentation/providers/user_provider.dart';
 
 /// Entry point for the login only project.
 ///
