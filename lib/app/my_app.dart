@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../presentation/screens/auth/sign_in.dart';
 import '../presentation/screens/home/home_view.dart';
+import '../presentation/screens/auth/sign_up.dart';
 
 /// Root widget for the login project.
 ///
@@ -17,12 +18,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HomeFinder Login',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const SignInView(),
       routes: {
         '/home': (_) => const HomeView(),
+        '/sign-up': (_) => const SignUpView(),
       },
     );
   }

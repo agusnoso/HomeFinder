@@ -122,6 +122,20 @@ class _SignInViewState extends State<SignInView> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/sign-up');
+                  },
+                  child: const Text(
+                    'Crear cuenta',
+                    style: TextStyle(
+                      color: Color(0xFF4d81e7),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
