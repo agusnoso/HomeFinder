@@ -18,7 +18,74 @@ class HomeView extends StatelessWidget {
     final bool esHuesped = rolUsuario == 'huesped';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('HomeFinder'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('HomeFinder'),
+        centerTitle: true,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.person),
+            onSelected: (value) {
+              if (value == 'perfil') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Perfil disponible próximamente'),
+                  ),
+                );
+              }
+
+              if (value == 'configuracion') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Configuración disponible próximamente'),
+                  ),
+                );
+              }
+
+              if (value == 'logout') {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (route) => false,
+                );
+              }
+            },
+            itemBuilder:
+                (context) => const [
+                  PopupMenuItem(
+                    value: 'perfil',
+                    child: Row(
+                      children: [
+                        Icon(Icons.account_circle),
+                        SizedBox(width: 8),
+                        Text('Mi perfil'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'configuracion',
+                    child: Row(
+                      children: [
+                        Icon(Icons.settings),
+                        SizedBox(width: 8),
+                        Text('Configuración'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuDivider(),
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout),
+                        SizedBox(width: 8),
+                        Text('Cerrar sesión'),
+                      ],
+                    ),
+                  ),
+                ],
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
