@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../widgets/form_widgets.dart';
+import '../../../data/services/auth_service.dart';
 import '../../providers/user_provider.dart';
+import '../../widgets/form_widgets.dart';
 
-/// Login screen with user and password fields only.
-///
-/// This widget reproduces the structure of the original login page but
-/// intentionally omits the domain field. It leverages the [FormWidgets]
-/// helper for reusable input widgets and a [UserProvider] to store
-/// the logged in username. The authentication logic has been
-/// intentionally kept as a stub—replace the contents of [_onSignIn]
-/// with a real API call when integrating backend functionality.
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
 
@@ -20,15 +14,17 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
-  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final formWidgets = FormWidgets();
+  final AuthService _authService = AuthService();
 
   bool _isHidden = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _userController.dispose();
+    _emailController.dispose();
     _passController.dispose();
     super.dispose();
   }
@@ -40,26 +36,53 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Future<void> _onSignIn() async {
-    final username = _userController.text.trim();
+    final email = _emailController.text.trim();
     final password = _passController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, introduzca usuario y contraseña'),
-        ),
+        const SnackBar(content: Text('Por favor, introduzca email y contraseña')),
       );
       return;
     }
 
-    // TODO: integrate real authentication here (API call).
+    setState(() {
+      _isLoading = true;
+    });
 
-    // Save the username globally.
-    context.read<UserProvider>().setUsername(username);
+    try {
+      final profile = await _authService.signIn(email: email, password: password);
 
-    // Navigate to the home page.
-    if (context.mounted) {
+      if (!context.mounted) {
+        return;
+      }
+
+      context.read<UserProvider>().setUserData(
+        username: profile['username']!,
+        role: profile['role']!,
+      );
+
       Navigator.pushReplacementNamed(context, '/home');
+    } on AuthException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al iniciar sesión: ${error.message}')));
+    } catch (_) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo iniciar sesión. Inténtalo de nuevo.')),
+      );
+    } finally {
+      if (context.mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -80,16 +103,16 @@ class _SignInViewState extends State<SignInView> {
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 32),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: const Text('Usuario', style: TextStyle(fontSize: 17)),
+                  child: Text('Email', style: TextStyle(fontSize: 17)),
                 ),
                 const SizedBox(height: 8),
-                formWidgets.usernameField(_userController),
+                formWidgets.usernameField(_emailController),
                 const SizedBox(height: 16),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: const Text(
+                  child: Text(
                     'Contraseña',
                     style: TextStyle(fontSize: 17),
                   ),
@@ -105,25 +128,35 @@ class _SignInViewState extends State<SignInView> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: _onSignIn,
+                    onPressed: _isLoading ? null : _onSignIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF353535),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Entrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.4,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : const Text(
+                            'Entrar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
-
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/sign-up');
