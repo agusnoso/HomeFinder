@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../data/services/auth_service.dart';
 import '../../providers/user_provider.dart';
 
 class SignUpView extends StatefulWidget {
@@ -11,15 +13,18 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  final TextEditingController _userController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   String _selectedRole = 'huesped';
   bool _isHidden = true;
 
   @override
   void dispose() {
-    _userController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
     _passController.dispose();
     super.dispose();
   }
@@ -30,35 +35,55 @@ class _SignUpViewState extends State<SignUpView> {
     });
   }
 
-  void _onSignUp() {
-    final username = _userController.text.trim();
+  Future<void> _onSignUp() async {
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
     final password = _passController.text.trim();
 
-    if (username.isEmpty || password.isEmpty) {
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, complete todos los campos')),
       );
       return;
     }
 
-    // TODO: conectar registro real con Supabase Auth.
-    // TODO: guardar el rol del usuario en la base de datos.
+    try {
+      await _authService.signUp(
+        email: email,
+        password: password,
+        username: username,
+        role: _selectedRole,
+      );
 
-    context.read<UserProvider>().setUserData(
-      username: username,
-      role: _selectedRole,
-    );
+      if (!context.mounted) {
+        return;
+      }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Cuenta creada como ${_selectedRole == 'propietario' ? 'Propietario' : 'Huésped'}',
-        ),
-      ),
-    );
+      context.read<UserProvider>().setUserData(
+        username: username,
+        role: _selectedRole,
+      );
 
-    Navigator.pushReplacementNamed(context, '/home');
-    Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cuenta creada correctamente')),
+      );
+
+      Navigator.pushReplacementNamed(context, '/home');
+    } on AuthException catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.message)));
+    } catch (_) {
+      if (!context.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo completar el registro')),
+      );
+    }
   }
 
   @override
@@ -82,20 +107,36 @@ class _SignUpViewState extends State<SignUpView> {
 
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Usuario / Email',
-                    style: TextStyle(fontSize: 17),
-                  ),
+                  child: Text('Usuario', style: TextStyle(fontSize: 17)),
                 ),
                 const SizedBox(height: 8),
                 TextField(
-                  controller: _userController,
+                  controller: _usernameController,
                   decoration: InputDecoration(
-                    hintText: 'Introduce tu usuario o email',
+                    hintText: 'Introduce tu nombre de usuario',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                     prefixIcon: const Icon(Icons.person),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Email', style: TextStyle(fontSize: 17)),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: 'Introduce tu email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    prefixIcon: const Icon(Icons.alternate_email),
                   ),
                 ),
 
