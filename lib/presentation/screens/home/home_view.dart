@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/services/auth_service.dart';
 import '../../providers/user_provider.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      await AuthService().signOut();
+      if (!context.mounted) return;
+
+      context.read<UserProvider>().clearUserData();
+
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    } catch (_) {
+      if (!context.mounted) return;
+
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('No se pudo cerrar sesión. Inténtalo de nuevo.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +42,7 @@ class HomeView extends StatelessWidget {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.person),
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'perfil') {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -40,13 +60,7 @@ class HomeView extends StatelessWidget {
               }
 
               if (value == 'logout') {
-                context.read<UserProvider>().clearUserData();
-
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/',
-                  (route) => false,
-                );
+                await _handleLogout(context);
               }
             },
             itemBuilder:
