@@ -70,4 +70,10 @@ class AuthService {
 
     return {'username': username, 'email': profileEmail, 'role': role};
   }
+
+
+  Future<void> signOut() async {
+    await _client.auth.signOut();
+  }
+
 }
