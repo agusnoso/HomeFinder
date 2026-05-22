@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_finder/data/services/property_service.dart';
+import '../../../data/services/property_service.dart';
 
 class MyPropertiesView extends StatefulWidget {
   const MyPropertiesView({super.key});
@@ -72,18 +72,24 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
             itemBuilder: (context, index) {
               final property = properties[index];
 
-              final String title = (property['title'] as String?)?.trim().isNotEmpty == true
-                  ? property['title'] as String
-                  : 'Sin título';
-              final String city = (property['city'] as String?)?.trim().isNotEmpty == true
-                  ? property['city'] as String
-                  : 'Ciudad no disponible';
-              final String operationType = (property['operation_type'] as String?)?.trim().isNotEmpty == true
-                  ? property['operation_type'] as String
-                  : 'Tipo de operación no disponible';
-              final String propertyType = (property['property_type'] as String?)?.trim().isNotEmpty == true
-                  ? property['property_type'] as String
-                  : 'Tipo de vivienda no disponible';
+              final String title =
+                  (property['title'] as String?)?.trim().isNotEmpty == true
+                      ? property['title'] as String
+                      : 'Sin título';
+              final String city =
+                  (property['city'] as String?)?.trim().isNotEmpty == true
+                      ? property['city'] as String
+                      : 'Ciudad no disponible';
+              final String operationType =
+                  (property['operation_type'] as String?)?.trim().isNotEmpty ==
+                          true
+                      ? property['operation_type'] as String
+                      : 'Tipo de operación no disponible';
+              final String propertyType =
+                  (property['property_type'] as String?)?.trim().isNotEmpty ==
+                          true
+                      ? property['property_type'] as String
+                      : 'Tipo de vivienda no disponible';
 
               return Card(
                 elevation: 1,
@@ -101,10 +107,7 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        city,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                      Text(city, style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 8),
                       Text(
                         _formatPrice(property['price']),
