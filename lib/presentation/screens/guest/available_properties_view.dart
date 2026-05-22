@@ -140,63 +140,14 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
   }
 
   Future<void> _showRequestDialog(Map<String, dynamic> property) async {
-    final TextEditingController messageController = TextEditingController();
-    String? validationError;
-
-    final bool? shouldSend = await showDialog<bool>(
+    final String? message = await showDialog<String>(
       context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Solicitar información'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: messageController,
-                    minLines: 3,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      labelText: 'Mensaje',
-                      hintText: 'Escribe tu consulta sobre la vivienda',
-                      errorText: validationError,
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Cancelar'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    final message = messageController.text.trim();
-                    if (message.isEmpty) {
-                      setDialogState(() {
-                        validationError = 'El mensaje no puede estar vacío.';
-                      });
-                      return;
-                    }
-                    Navigator.of(dialogContext).pop(true);
-                  },
-                  child: const Text('Enviar solicitud'),
-                ),
-              ],
-            );
-          },
-        );
-      },
+      builder: (_) => const _RequestMessageDialog(),
     );
 
-    if (shouldSend != true) {
-      messageController.dispose();
+    if (message == null) {
       return;
     }
-
-    final String message = messageController.text.trim();
-    messageController.dispose();
 
     final String? propertyId = property['id']?.toString();
     final String? ownerId = property['owner_id']?.toString();
@@ -242,5 +193,70 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
         });
       }
     }
+  }
+}
+
+class _RequestMessageDialog extends StatefulWidget {
+  const _RequestMessageDialog();
+
+  @override
+  State<_RequestMessageDialog> createState() => _RequestMessageDialogState();
+}
+
+class _RequestMessageDialogState extends State<_RequestMessageDialog> {
+  late final TextEditingController _messageController;
+  String? _validationError;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Solicitar información'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _messageController,
+            minLines: 3,
+            maxLines: 5,
+            decoration: InputDecoration(
+              labelText: 'Mensaje',
+              hintText: 'Escribe tu consulta sobre la vivienda',
+              errorText: _validationError,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancelar'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final message = _messageController.text.trim();
+            if (message.isEmpty) {
+              setState(() {
+                _validationError = 'El mensaje no puede estar vacío.';
+              });
+              return;
+            }
+            Navigator.of(context).pop(message);
+          },
+          child: const Text('Enviar solicitud'),
+        ),
+      ],
+    );
   }
 }
