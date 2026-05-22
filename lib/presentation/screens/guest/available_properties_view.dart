@@ -12,6 +12,7 @@ class AvailablePropertiesView extends StatefulWidget {
 class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
   final PropertyService _propertyService = PropertyService();
   late final Future<List<Map<String, dynamic>>> _availablePropertiesFuture;
+  bool _isSendingRequest = false;
 
   @override
   void initState() {
@@ -109,6 +110,16 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 14),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isSendingRequest
+                              ? null
+                              : () => _showRequestDialog(property),
+                          child: const Text('Solicitar información'),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -126,5 +137,110 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
     }
 
     return 'No especificado';
+  }
+
+  Future<void> _showRequestDialog(Map<String, dynamic> property) async {
+    final TextEditingController messageController = TextEditingController();
+    String? validationError;
+
+    final bool? shouldSend = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Solicitar información'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: messageController,
+                    minLines: 3,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      labelText: 'Mensaje',
+                      hintText: 'Escribe tu consulta sobre la vivienda',
+                      errorText: validationError,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final message = messageController.text.trim();
+                    if (message.isEmpty) {
+                      setDialogState(() {
+                        validationError = 'El mensaje no puede estar vacío.';
+                      });
+                      return;
+                    }
+                    Navigator.of(dialogContext).pop(true);
+                  },
+                  child: const Text('Enviar solicitud'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (shouldSend != true) {
+      messageController.dispose();
+      return;
+    }
+
+    final String message = messageController.text.trim();
+    messageController.dispose();
+
+    final String? propertyId = property['id']?.toString();
+    final String? ownerId = property['owner_id']?.toString();
+
+    if (propertyId == null ||
+        propertyId.isEmpty ||
+        ownerId == null ||
+        ownerId.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'No se pudo enviar la solicitud por falta de datos de la vivienda.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSendingRequest = true;
+    });
+
+    try {
+      await _propertyService.createPropertyRequest(
+        propertyId: propertyId,
+        ownerId: ownerId,
+        message: message,
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Solicitud enviada con éxito.')));
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No se pudo enviar la solicitud: $error')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSendingRequest = false;
+        });
+      }
+    }
   }
 }

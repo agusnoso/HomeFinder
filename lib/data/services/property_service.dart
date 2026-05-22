@@ -62,11 +62,31 @@ class PropertyService {
 
     final List<dynamic> response = await _client
         .from('properties')
-        .select()
+        .select('id, owner_id, title, description, city, price, operation_type, property_type')
         .order('created_at', ascending: false);
 
     return response
         .map((property) => Map<String, dynamic>.from(property as Map))
         .toList();
+  }
+
+  Future<void> createPropertyRequest({
+    required String propertyId,
+    required String ownerId,
+    required String message,
+  }) async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para enviar una solicitud.');
+    }
+
+    await _client.from('property_requests').insert({
+      'property_id': propertyId,
+      'guest_id': currentUser.id,
+      'owner_id': ownerId,
+      'message': message,
+      'status': 'pendiente',
+    });
   }
 }
