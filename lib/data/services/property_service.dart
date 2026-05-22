@@ -32,4 +32,22 @@ class PropertyService {
       'property_type': propertyType,
     });
   }
+
+  Future<List<Map<String, dynamic>>> getMyProperties() async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para ver tus viviendas.');
+    }
+
+    final List<dynamic> response = await _client
+        .from('properties')
+        .select()
+        .eq('owner_id', currentUser.id)
+        .order('created_at', ascending: false);
+
+    return response
+        .map((property) => Map<String, dynamic>.from(property as Map))
+        .toList();
+  }
 }
