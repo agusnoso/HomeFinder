@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:homefinder/data/services/property_service.dart';
+import '../../../data/services/property_service.dart';
 
 class AvailablePropertiesView extends StatefulWidget {
   const AvailablePropertiesView({super.key});
 
   @override
-  State<AvailablePropertiesView> createState() => _AvailablePropertiesViewState();
+  State<AvailablePropertiesView> createState() =>
+      _AvailablePropertiesViewState();
 }
 
 class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
@@ -68,8 +69,10 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
               final title = (property['title'] as String?)?.trim();
               final city = (property['city'] as String?)?.trim();
               final description = (property['description'] as String?)?.trim();
-              final operationType = (property['operation_type'] as String?)?.trim();
-              final propertyType = (property['property_type'] as String?)?.trim();
+              final operationType =
+                  (property['operation_type'] as String?)?.trim();
+              final propertyType =
+                  (property['property_type'] as String?)?.trim();
               final price = property['price'];
 
               return Card(
@@ -81,12 +84,13 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
                     children: [
                       Text(
                         title?.isNotEmpty == true ? title! : 'Sin título',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 6),
-                      Text('Ciudad: ${city?.isNotEmpty == true ? city : 'No especificada'}'),
+                      Text(
+                        'Ciudad: ${city?.isNotEmpty == true ? city : 'No especificada'}',
+                      ),
                       const SizedBox(height: 4),
                       Text('Precio: ${_formatPrice(price)}'),
                       const SizedBox(height: 4),
