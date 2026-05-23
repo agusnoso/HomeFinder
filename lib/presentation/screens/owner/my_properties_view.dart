@@ -24,7 +24,7 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
     final num? price = value is num ? value : num.tryParse(value.toString());
     if (price == null) return 'Precio no disponible';
 
-    return '\$${price.toStringAsFixed(0)}';
+    return '${price.toStringAsFixed(0)} €';
   }
 
   @override
