@@ -63,7 +63,7 @@ class PropertyService {
     final List<dynamic> response = await _client
         .from('properties')
         .select(
-          'id, owner_id, title, description, city, price, operation_type, property_type',
+          'id, owner_id, title, description, address, city, price, operation_type, property_type',
         )
         .order('created_at', ascending: false);
 
