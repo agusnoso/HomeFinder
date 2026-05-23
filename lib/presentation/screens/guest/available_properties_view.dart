@@ -132,11 +132,13 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
   }
 
   String _formatPrice(dynamic value) {
-    if (value is num) {
-      return '\$${value.toStringAsFixed(0)}';
+    final num? price = value is num ? value : num.tryParse(value.toString());
+
+    if (price == null) {
+      return 'No especificado';
     }
 
-    return 'No especificado';
+    return '${price.toStringAsFixed(0)} €';
   }
 
   Future<void> _showRequestDialog(Map<String, dynamic> property) async {
