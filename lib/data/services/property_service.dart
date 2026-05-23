@@ -112,6 +112,27 @@ class PropertyService {
         .eq('id', requestId);
   }
 
+
+  Future<List<Map<String, dynamic>>> getGuestRequests() async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para ver tus solicitudes.');
+    }
+
+    final List<dynamic> response = await _client
+        .from('property_requests')
+        .select(
+          'id, property_id, guest_id, owner_id, message, status, created_at, properties(title, city, price)',
+        )
+        .eq('guest_id', currentUser.id)
+        .order('created_at', ascending: false);
+
+    return response
+        .map((request) => Map<String, dynamic>.from(request as Map))
+        .toList();
+  }
+
   Future<List<Map<String, dynamic>>> getOwnerRequests() async {
     final User? currentUser = _client.auth.currentUser;
 
