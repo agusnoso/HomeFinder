@@ -92,6 +92,26 @@ class PropertyService {
     });
   }
 
+  Future<void> updateRequestStatus({
+    required String requestId,
+    required String status,
+  }) async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para actualizar solicitudes.');
+    }
+
+    if (status != 'aceptada' && status != 'rechazada') {
+      throw ArgumentError('Estado inválido. Usa "aceptada" o "rechazada".');
+    }
+
+    await _client
+        .from('property_requests')
+        .update({'status': status})
+        .eq('id', requestId);
+  }
+
   Future<List<Map<String, dynamic>>> getOwnerRequests() async {
     final User? currentUser = _client.auth.currentUser;
 

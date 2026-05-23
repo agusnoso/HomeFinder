@@ -12,11 +12,58 @@ class OwnerRequestsView extends StatefulWidget {
 class _OwnerRequestsViewState extends State<OwnerRequestsView> {
   final PropertyService _propertyService = PropertyService();
   late Future<List<Map<String, dynamic>>> _requestsFuture;
+  final Set<String> _processingRequestIds = <String>{};
 
   @override
   void initState() {
     super.initState();
     _requestsFuture = _propertyService.getOwnerRequests();
+  }
+
+  void _reloadRequests() {
+    setState(() {
+      _requestsFuture = _propertyService.getOwnerRequests();
+    });
+  }
+
+  Future<void> _handleStatusUpdate({
+    required String requestId,
+    required String status,
+  }) async {
+    setState(() {
+      _processingRequestIds.add(requestId);
+    });
+
+    try {
+      await _propertyService.updateRequestStatus(
+        requestId: requestId,
+        status: status,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            status == 'aceptada'
+                ? 'Solicitud aceptada correctamente.'
+                : 'Solicitud rechazada correctamente.',
+          ),
+        ),
+      );
+      _reloadRequests();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No se pudo actualizar la solicitud. $error'),
+        ),
+      );
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _processingRequestIds.remove(requestId);
+      });
+    }
   }
 
   @override
@@ -71,12 +118,15 @@ class _OwnerRequestsViewState extends State<OwnerRequestsView> {
                   ? Map<String, dynamic>.from(request['properties'] as Map)
                   : null;
 
+              final String requestId = (request['id'] ?? '').toString();
               final String message = (request['message'] ?? '').toString();
               final String status = (request['status'] ?? 'sin estado').toString();
               final String? createdAt = request['created_at']?.toString();
               final String title = (property?['title'] ?? 'Vivienda sin título')
                   .toString();
               final String city = (property?['city'] ?? '').toString();
+              final bool isPending = status == 'pendiente';
+              final bool isProcessing = _processingRequestIds.contains(requestId);
 
               return Card(
                 elevation: 1,
@@ -123,6 +173,36 @@ class _OwnerRequestsViewState extends State<OwnerRequestsView> {
                             ),
                         ],
                       ),
+                      if (isPending) ...[
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: isProcessing
+                                    ? null
+                                    : () => _handleStatusUpdate(
+                                        requestId: requestId,
+                                        status: 'rechazada',
+                                      ),
+                                child: const Text('Rechazar'),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: isProcessing
+                                    ? null
+                                    : () => _handleStatusUpdate(
+                                        requestId: requestId,
+                                        status: 'aceptada',
+                                      ),
+                                child: const Text('Aceptar'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
