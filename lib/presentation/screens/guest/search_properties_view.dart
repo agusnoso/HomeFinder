@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
 import 'property_detail_view.dart';
+import '../../widgets/app_background.dart';
 
 class SearchPropertiesView extends StatefulWidget {
   const SearchPropertiesView({super.key});
@@ -33,7 +34,8 @@ class _SearchPropertiesViewState extends State<SearchPropertiesView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Buscar viviendas')),
-      body: SafeArea(
+      body: AppBackground(
+        child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -45,6 +47,7 @@ class _SearchPropertiesViewState extends State<SearchPropertiesView> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

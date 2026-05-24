@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../data/services/auth_service.dart';
 import '../../providers/user_provider.dart';
+import '../../widgets/app_background.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -91,7 +92,8 @@ class _SignUpViewState extends State<SignUpView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Registro')),
-      body: Center(
+      body: AppBackground(
+        child: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
@@ -234,6 +236,7 @@ class _SignUpViewState extends State<SignUpView> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

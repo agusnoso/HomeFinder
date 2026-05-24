@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../widgets/app_background.dart';
 
 class GuestRequestsView extends StatefulWidget {
   const GuestRequestsView({super.key});
@@ -24,7 +25,8 @@ class _GuestRequestsViewState extends State<GuestRequestsView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Mis solicitudes'), centerTitle: true),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      body: AppBackground(
+        child: FutureBuilder<List<Map<String, dynamic>>>(
         future: _requestsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -149,6 +151,7 @@ class _GuestRequestsViewState extends State<GuestRequestsView> {
             },
           );
         },
+      ),
       ),
     );
   }
