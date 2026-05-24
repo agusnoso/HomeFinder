@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
-import '../../../widgets/app_background.dart';
+import '../../widgets/app_background.dart';
 
 class OwnerMessagesView extends StatefulWidget {
   const OwnerMessagesView({super.key});
@@ -28,122 +28,129 @@ class _OwnerMessagesViewState extends State<OwnerMessagesView> {
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: _messagesFuture,
           builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(
-                  'No se pudieron cargar los mensajes.\n${snapshot.error}',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-
-          final List<Map<String, dynamic>> messages = snapshot.data ?? [];
-
-          if (messages.isEmpty) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'Aún no recibiste mensajes de solicitudes.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-              ),
-            );
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: messages.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final Map<String, dynamic> request = messages[index];
-              final Map<String, dynamic>? property = request['properties'] is Map
-                  ? Map<String, dynamic>.from(request['properties'] as Map)
-                  : null;
-
-              final String message =
-                  (request['message'] as String?)?.trim().isNotEmpty == true
-                  ? request['message'] as String
-                  : 'Sin mensaje';
-              final String status = (request['status'] as String?) ?? 'pendiente';
-              final String title =
-                  (property?['title'] as String?) ?? 'Vivienda sin título';
-              final String city = (property?['city'] as String?) ?? '';
-              final String? createdAt = request['created_at'] as String?;
-
-              return Card(
-                elevation: 1,
+            if (snapshot.hasError) {
+              return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (city.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            city,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                        ),
-                      const SizedBox(height: 10),
-                      Text('Mensaje: $message', style: const TextStyle(fontSize: 14)),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _statusColor(status).withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(
-                              'Estado: ${_normalizeStatus(status)}',
-                              style: TextStyle(
-                                color: _statusColor(status),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          if (createdAt != null)
-                            Text(
-                              'Fecha: ${_formatDate(createdAt)}',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ],
+                  padding: const EdgeInsets.all(24),
+                  child: Text(
+                    'No se pudieron cargar los mensajes.\n${snapshot.error}',
+                    textAlign: TextAlign.center,
                   ),
                 ),
               );
-            },
-          );
+            }
+
+            final List<Map<String, dynamic>> messages = snapshot.data ?? [];
+
+            if (messages.isEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    'Aún no recibiste mensajes de solicitudes.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              );
+            }
+
+            return ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: messages.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final Map<String, dynamic> request = messages[index];
+                final Map<String, dynamic>? property =
+                    request['properties'] is Map
+                        ? Map<String, dynamic>.from(
+                          request['properties'] as Map,
+                        )
+                        : null;
+
+                final String message =
+                    (request['message'] as String?)?.trim().isNotEmpty == true
+                        ? request['message'] as String
+                        : 'Sin mensaje';
+                final String status =
+                    (request['status'] as String?) ?? 'pendiente';
+                final String title =
+                    (property?['title'] as String?) ?? 'Vivienda sin título';
+                final String city = (property?['city'] as String?) ?? '';
+                final String? createdAt = request['created_at'] as String?;
+
+                return Card(
+                  elevation: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (city.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              city,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Mensaje: $message',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _statusColor(status).withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Text(
+                                'Estado: ${_normalizeStatus(status)}',
+                                style: TextStyle(
+                                  color: _statusColor(status),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            if (createdAt != null)
+                              Text(
+                                'Fecha: ${_formatDate(createdAt)}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
           },
         ),
       ),
