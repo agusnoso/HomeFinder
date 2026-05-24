@@ -46,7 +46,9 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
 
     if (parsedPrice == null || parsedPrice <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Introduce un precio válido mayor que 0.')),
+        const SnackBar(
+          content: Text('Introduce un precio válido mayor que 0.'),
+        ),
       );
       return;
     }
@@ -199,13 +201,16 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: _selectedOperationType,
+                    initialValue: _selectedOperationType,
                     decoration: const InputDecoration(
                       labelText: 'Tipo de operación',
                       border: OutlineInputBorder(),
                     ),
                     items: const [
-                      DropdownMenuItem(value: 'alquiler', child: Text('Alquiler')),
+                      DropdownMenuItem(
+                        value: 'alquiler',
+                        child: Text('Alquiler'),
+                      ),
                       DropdownMenuItem(value: 'venta', child: Text('Venta')),
                     ],
                     onChanged: (value) {
@@ -219,7 +224,7 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
-                    value: _selectedPropertyType,
+                    initialValue: _selectedPropertyType,
                     decoration: const InputDecoration(
                       labelText: 'Tipo de vivienda',
                       border: OutlineInputBorder(),
@@ -242,13 +247,16 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _publishProperty,
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(strokeWidth: 2.4),
-                            )
-                          : const Text('Publicar vivienda'),
+                      child:
+                          _isLoading
+                              ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.4,
+                                ),
+                              )
+                              : const Text('Publicar vivienda'),
                     ),
                   ),
                 ],

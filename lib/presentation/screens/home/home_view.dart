@@ -21,7 +21,9 @@ class HomeView extends StatelessWidget {
       if (!context.mounted) return;
 
       scaffoldMessenger.showSnackBar(
-        const SnackBar(content: Text('No se pudo cerrar sesión. Inténtalo de nuevo.')),
+        const SnackBar(
+          content: Text('No se pudo cerrar sesión. Inténtalo de nuevo.'),
+        ),
       );
     }
   }
@@ -49,26 +51,22 @@ class HomeView extends StatelessWidget {
                     content: Text('Perfil disponible próximamente'),
                   ),
                 );
-              }
-
-              if (value == 'configuracion') {
+              } else if (value == 'configuracion') {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Configuración disponible próximamente'),
                   ),
                 );
-              }
-
-              if (value == 'logout') {
+              } else if (value == 'logout') {
                 await _handleLogout(context);
               }
             },
             itemBuilder:
-                (context) => const [
+                (context) => [
                   PopupMenuItem(
                     value: 'perfil',
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.account_circle),
                         SizedBox(width: 8),
                         Text('Mi perfil'),
@@ -78,18 +76,18 @@ class HomeView extends StatelessWidget {
                   PopupMenuItem(
                     value: 'configuracion',
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.settings),
                         SizedBox(width: 8),
                         Text('Configuración'),
                       ],
                     ),
                   ),
-                  PopupMenuDivider(),
+                  const PopupMenuDivider(),
                   PopupMenuItem(
                     value: 'logout',
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.logout),
                         SizedBox(width: 8),
                         Text('Cerrar sesión'),
@@ -107,87 +105,102 @@ class HomeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            Text(
-              'Bienvenido${username.isNotEmpty ? ', $username' : ''}',
-              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              esPropietario ? 'Modo Propietario' : 'Modo Huesped',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[700],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            if (esPropietario) ...[
-              _HomeOptionCard(
-                icon: Icons.add_home,
-                title: 'Publicar vivienda',
-                subtitle: 'Añade una vivienda en alquiler o venta',
-                onTap:
-                    () => Navigator.pushNamed(context, '/owner/publish-property'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.home_work,
-                title: 'Mis viviendas',
-                subtitle: 'Consulta y gestiona tus inmuebles publicados',
-                onTap:
-                    () => Navigator.pushNamed(context, '/owner/my-properties'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.assignment,
-                title: 'Solicitudes recibidas',
-                subtitle: 'Revisa las solicitudes de los huéspedes',
-                onTap:
-                    () => Navigator.pushNamed(context, '/owner/requests'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.message,
-                title: 'Mensajes',
-                subtitle: 'Comunícate con los huéspedes interesados',
-                onTap:
-                    () => Navigator.pushNamed(context, '/owner/messages'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.analytics,
-                title: 'Estadísticas',
-                subtitle: 'Consulta el resumen de tus publicaciones y solicitudes',
-                onTap: () => Navigator.pushNamed(context, '/owner/stats'),
-              ),
-            ],
-
-            if (esHuesped) ...[
-              _HomeOptionCard(
-                icon: Icons.search,
-                title: 'Buscar viviendas',
-                subtitle: 'Encuentra viviendas disponibles',
-                onTap:
-                    () => Navigator.pushNamed(context, '/guest/search-properties'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.apartment,
-                title: 'Viviendas disponibles',
-                subtitle: 'Consulta inmuebles en alquiler o venta',
-                onTap:
-                    () => Navigator.pushNamed(context, '/guest/available-properties'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.list_alt,
-                title: 'Mis solicitudes',
-                subtitle: 'Revisa las solicitudes que has enviado',
-                onTap:
-                    () => Navigator.pushNamed(context, '/guest/requests'),
-              ),
-              _HomeOptionCard(
-                icon: Icons.message,
-                title: 'Mensajes',
-                subtitle: 'Comunícate con propietarios',
-                onTap:
-                    () => Navigator.pushNamed(context, '/guest/messages'),
-              ),
+                Text(
+                  'Bienvenido${username.isNotEmpty ? ', $username' : ''}',
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  esPropietario ? 'Modo Propietario' : 'Modo Huesped',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                if (esPropietario) ...[
+                  _HomeOptionCard(
+                    icon: Icons.add_home,
+                    title: 'Publicar vivienda',
+                    subtitle: 'Añade una vivienda en alquiler o venta',
+                    onTap:
+                        () => Navigator.pushNamed(
+                          context,
+                          '/owner/publish-property',
+                        ),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.home_work,
+                    title: 'Mis viviendas',
+                    subtitle: 'Consulta y gestiona tus inmuebles publicados',
+                    onTap:
+                        () => Navigator.pushNamed(
+                          context,
+                          '/owner/my-properties',
+                        ),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.assignment,
+                    title: 'Solicitudes recibidas',
+                    subtitle: 'Revisa las solicitudes de los huéspedes',
+                    onTap:
+                        () => Navigator.pushNamed(context, '/owner/requests'),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.message,
+                    title: 'Mensajes',
+                    subtitle: 'Comunícate con los huéspedes interesados',
+                    onTap:
+                        () => Navigator.pushNamed(context, '/owner/messages'),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.analytics,
+                    title: 'Estadísticas',
+                    subtitle:
+                        'Consulta el resumen de tus publicaciones y solicitudes',
+                    onTap: () => Navigator.pushNamed(context, '/owner/stats'),
+                  ),
+                ],
+                if (esHuesped) ...[
+                  _HomeOptionCard(
+                    icon: Icons.search,
+                    title: 'Buscar viviendas',
+                    subtitle: 'Encuentra viviendas disponibles',
+                    onTap:
+                        () => Navigator.pushNamed(
+                          context,
+                          '/guest/search-properties',
+                        ),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.apartment,
+                    title: 'Viviendas disponibles',
+                    subtitle: 'Consulta inmuebles en alquiler o venta',
+                    onTap:
+                        () => Navigator.pushNamed(
+                          context,
+                          '/guest/available-properties',
+                        ),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.list_alt,
+                    title: 'Mis solicitudes',
+                    subtitle: 'Revisa las solicitudes que has enviado',
+                    onTap:
+                        () => Navigator.pushNamed(context, '/guest/requests'),
+                  ),
+                  _HomeOptionCard(
+                    icon: Icons.message,
+                    title: 'Mensajes',
+                    subtitle: 'Comunícate con propietarios',
+                    onTap:
+                        () => Navigator.pushNamed(context, '/guest/messages'),
+                  ),
+                ],
               ],
             ),
           ),
