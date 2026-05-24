@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../widgets/app_background.dart';
 
 class OwnerStatsView extends StatefulWidget {
   const OwnerStatsView({super.key});
@@ -24,7 +25,8 @@ class _OwnerStatsViewState extends State<OwnerStatsView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Estadísticas')),
-      body: FutureBuilder<Map<String, int>>(
+      body: AppBackground(
+        child: FutureBuilder<Map<String, int>>(
         future: _statsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -141,6 +143,7 @@ class _OwnerStatsViewState extends State<OwnerStatsView> {
             },
           );
         },
+      ),
       ),
     );
   }

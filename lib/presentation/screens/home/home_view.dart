@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../data/services/auth_service.dart';
 import '../../providers/user_provider.dart';
+import '../../widgets/app_background.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -99,7 +100,8 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
+      body: AppBackground(
+        child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
@@ -209,6 +211,7 @@ class HomeView extends StatelessWidget {
                 ],
           ],
         ),
+      ),
       ),
     );
   }

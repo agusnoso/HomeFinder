@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../widgets/app_background.dart';
 
 class PublishPropertyView extends StatefulWidget {
   const PublishPropertyView({super.key});
@@ -138,7 +139,8 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Publicar vivienda'), centerTitle: true),
-      body: SingleChildScrollView(
+      body: AppBackground(
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Center(
           child: ConstrainedBox(
@@ -265,6 +267,7 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

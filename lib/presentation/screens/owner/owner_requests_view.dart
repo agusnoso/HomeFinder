@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../widgets/app_background.dart';
 
 class OwnerRequestsView extends StatefulWidget {
   const OwnerRequestsView({super.key});
@@ -74,7 +75,8 @@ class _OwnerRequestsViewState extends State<OwnerRequestsView> {
         title: const Text('Solicitudes recibidas'),
         centerTitle: true,
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      body: AppBackground(
+        child: FutureBuilder<List<Map<String, dynamic>>>(
         future: _requestsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -211,6 +213,7 @@ class _OwnerRequestsViewState extends State<OwnerRequestsView> {
             },
           );
         },
+      ),
       ),
     );
   }

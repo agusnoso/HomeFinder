@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/app_background.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -23,7 +24,8 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
+      body: AppBackground(
+        child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,6 +61,7 @@ class _SplashViewState extends State<SplashView> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

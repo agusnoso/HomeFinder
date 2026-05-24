@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../widgets/app_background.dart';
 
 class PropertyDetailView extends StatefulWidget {
   const PropertyDetailView({super.key, required this.property});
@@ -30,7 +31,8 @@ class _PropertyDetailViewState extends State<PropertyDetailView> {
       appBar: AppBar(
         title: const Text('Detalle de vivienda'),
       ),
-      body: SingleChildScrollView(
+      body: AppBackground(
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +62,7 @@ class _PropertyDetailViewState extends State<PropertyDetailView> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/services/property_service.dart';
 import 'property_detail_view.dart';
+import '../../widgets/app_background.dart';
 
 class AvailablePropertiesView extends StatefulWidget {
   const AvailablePropertiesView({super.key});
@@ -51,7 +52,8 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
         title: const Text('Viviendas disponibles'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: AppBackground(
+        child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -200,6 +202,7 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
