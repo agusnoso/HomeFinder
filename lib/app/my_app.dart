@@ -10,6 +10,7 @@ import '../presentation/screens/home/home_view.dart';
 import '../presentation/screens/owner/my_properties_view.dart';
 import '../presentation/screens/owner/owner_messages_view.dart';
 import '../presentation/screens/owner/owner_requests_view.dart';
+import '../presentation/screens/owner/owner_stats_view.dart';
 import '../presentation/screens/owner/publish_property_view.dart';
 
 class MyApp extends StatelessWidget {
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/owner/my-properties': (_) => const MyPropertiesView(),
         '/owner/requests': (_) => const OwnerRequestsView(),
         '/owner/messages': (_) => const OwnerMessagesView(),
+        '/owner/stats': (_) => const OwnerStatsView(),
         '/guest/search-properties': (_) => const SearchPropertiesView(),
         '/guest/available-properties': (_) => const AvailablePropertiesView(),
         '/guest/requests': (_) => const GuestRequestsView(),

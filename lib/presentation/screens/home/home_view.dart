@@ -149,6 +149,12 @@ class HomeView extends StatelessWidget {
                 onTap:
                     () => Navigator.pushNamed(context, '/owner/messages'),
               ),
+              _HomeOptionCard(
+                icon: Icons.analytics,
+                title: 'Estadísticas',
+                subtitle: 'Consulta el resumen de tus publicaciones y solicitudes',
+                onTap: () => Navigator.pushNamed(context, '/owner/stats'),
+              ),
             ],
 
             if (esHuesped) ...[
