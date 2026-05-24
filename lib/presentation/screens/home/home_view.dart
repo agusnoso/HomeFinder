@@ -100,11 +100,13 @@ class HomeView extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Text(
               'Bienvenido${username.isNotEmpty ? ', $username' : ''}',
               style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -186,8 +188,9 @@ class HomeView extends StatelessWidget {
                 onTap:
                     () => Navigator.pushNamed(context, '/guest/messages'),
               ),
-            ],
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
