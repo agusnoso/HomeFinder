@@ -99,12 +99,9 @@ class HomeView extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
                 Text(
                   'Bienvenido${username.isNotEmpty ? ', $username' : ''}',
                   style: const TextStyle(
@@ -201,9 +198,7 @@ class HomeView extends StatelessWidget {
                         () => Navigator.pushNamed(context, '/guest/messages'),
                   ),
                 ],
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
