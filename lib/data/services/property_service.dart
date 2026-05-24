@@ -51,7 +51,9 @@ class PropertyService {
         .toList();
   }
 
-  Future<List<Map<String, dynamic>>> getAvailableProperties() async {
+  Future<List<Map<String, dynamic>>> getAvailableProperties({
+    String? cityQuery,
+  }) async {
     final User? currentUser = _client.auth.currentUser;
 
     if (currentUser == null) {
@@ -60,12 +62,19 @@ class PropertyService {
       );
     }
 
-    final List<dynamic> response = await _client
-        .from('properties')
-        .select(
-          'id, owner_id, title, description, address, city, price, operation_type, property_type',
-        )
-        .order('created_at', ascending: false);
+    final String queryText = cityQuery?.trim() ?? '';
+    var query = _client.from('properties').select(
+      'id, owner_id, title, description, address, city, price, operation_type, property_type',
+    );
+
+    if (queryText.isNotEmpty) {
+      query = query.ilike('city', '%$queryText%');
+    }
+
+    final List<dynamic> response = await query.order(
+      'created_at',
+      ascending: false,
+    );
 
     return response
         .map((property) => Map<String, dynamic>.from(property as Map))
