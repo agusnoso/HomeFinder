@@ -46,6 +46,7 @@ class _AvailablePropertiesViewState extends State<AvailablePropertiesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Viviendas disponibles'),
         centerTitle: true,

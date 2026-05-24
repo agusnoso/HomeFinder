@@ -38,6 +38,7 @@ class HomeView extends StatelessWidget {
     final bool esHuesped = rolUsuario == 'huesped';
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('HomeFinder'),
         centerTitle: true,

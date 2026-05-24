@@ -96,6 +96,7 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Inicio de sesión')),
       body: Center(
         child: SingleChildScrollView(

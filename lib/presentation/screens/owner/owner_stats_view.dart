@@ -22,6 +22,7 @@ class _OwnerStatsViewState extends State<OwnerStatsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Estadísticas')),
       body: FutureBuilder<Map<String, int>>(
         future: _statsFuture,
