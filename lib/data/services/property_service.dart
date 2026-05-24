@@ -51,6 +51,51 @@ class PropertyService {
         .toList();
   }
 
+  Future<Map<String, int>> getOwnerStats() async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para ver tus estadísticas.');
+    }
+
+    final List<dynamic> propertiesResponse = await _client
+        .from('properties')
+        .select('id')
+        .eq('owner_id', currentUser.id);
+
+    final List<dynamic> requestsResponse = await _client
+        .from('property_requests')
+        .select('status')
+        .eq('owner_id', currentUser.id);
+
+    int pendingRequests = 0;
+    int acceptedRequests = 0;
+    int rejectedRequests = 0;
+
+    for (final request in requestsResponse) {
+      final Map<String, dynamic> requestMap = Map<String, dynamic>.from(
+        request as Map,
+      );
+      final String status = (requestMap['status'] as String? ?? '').toLowerCase();
+
+      if (status == 'pendiente') {
+        pendingRequests++;
+      } else if (status == 'aceptada') {
+        acceptedRequests++;
+      } else if (status == 'rechazada') {
+        rejectedRequests++;
+      }
+    }
+
+    return {
+      'totalProperties': propertiesResponse.length,
+      'totalRequests': requestsResponse.length,
+      'pendingRequests': pendingRequests,
+      'acceptedRequests': acceptedRequests,
+      'rejectedRequests': rejectedRequests,
+    };
+  }
+
   Future<List<Map<String, dynamic>>> getAvailableProperties({
     String? cityQuery,
   }) async {
@@ -125,7 +170,6 @@ class PropertyService {
         .eq('id', propertyId)
         .eq('owner_id', currentUser.id);
   }
-
 
   Future<List<Map<String, dynamic>>> searchProperties({
     String? city,
@@ -207,7 +251,6 @@ class PropertyService {
         .eq('id', requestId);
   }
 
-
   Future<List<Map<String, dynamic>>> getGuestRequests() async {
     final User? currentUser = _client.auth.currentUser;
 
@@ -237,7 +280,9 @@ class PropertyService {
 
     final List<dynamic> response = await _client
         .from('property_requests')
-        .select('id, property_id, guest_id, owner_id, message, status, created_at, properties(title, city, price)')
+        .select(
+          'id, property_id, guest_id, owner_id, message, status, created_at, properties(title, city, price)',
+        )
         .eq('owner_id', currentUser.id)
         .order('created_at', ascending: false);
 
