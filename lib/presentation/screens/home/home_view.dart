@@ -16,7 +16,7 @@ class HomeView extends StatelessWidget {
 
       context.read<UserProvider>().clearUserData();
 
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/sign-in', (route) => false);
     } catch (_) {
       if (!context.mounted) return;
 
@@ -110,12 +110,20 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  esPropietario ? 'Modo Propietario' : 'Modo Huesped',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F0F0),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(color: const Color(0xFFD9D9D9)),
+                  ),
+                  child: Text(
+                    esPropietario ? 'Modo Propietario' : 'Modo Huésped',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF6B6B6B),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -222,14 +230,22 @@ class _HomeOptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 14),
-      elevation: 3,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 10,
         ),
-        leading: Icon(icon, size: 34, color: Theme.of(context).primaryColor),
+        leading: Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F3F3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, size: 24, color: const Color(0xFF2B2B2B)),
+        ),
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),

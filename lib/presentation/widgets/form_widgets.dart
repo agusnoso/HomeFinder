@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// Collection of reusable form widgets used by the sign in screen.
-///
-/// In the original project the domain field lived here. For this
-/// simplified login project only the username and password fields are
-/// implemented. This class could be extended with additional widgets
-/// (e.g. for email or phone number) as needed.
 class FormWidgets {
-  /// Returns a text field for entering the username.
-  TextFormField usernameField(
-    TextEditingController controller,
-  ) {
+  TextFormField usernameField(TextEditingController controller) {
     return TextFormField(
       controller: controller,
+      keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        hintText: 'Introduce el usuario',
-        border: OutlineInputBorder(),
-        filled: true,
-        fillColor: Colors.white,
+        hintText: 'correo@ejemplo.com',
+        prefixIcon: Icon(Icons.alternate_email_rounded),
       ),
     );
   }
 
-  /// Returns a text field for entering the password.
   TextFormField passwordField(
     TextEditingController controller,
     bool isHidden,
@@ -32,16 +21,11 @@ class FormWidgets {
       controller: controller,
       obscureText: isHidden,
       decoration: InputDecoration(
-        hintText: '*******',
-        border: const OutlineInputBorder(),
-        filled: true,
-        fillColor: Colors.white,
+        hintText: '••••••••',
+        prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: GestureDetector(
           onTap: toggleVisibility,
-          child: Icon(
-            isHidden ? Icons.visibility_off : Icons.visibility,
-            color: Colors.grey,
-          ),
+          child: Icon(isHidden ? Icons.visibility_off : Icons.visibility),
         ),
       ),
     );
