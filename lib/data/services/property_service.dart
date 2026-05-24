@@ -81,6 +81,47 @@ class PropertyService {
         .toList();
   }
 
+
+  Future<List<Map<String, dynamic>>> searchProperties({
+    String? city,
+    String? operationType,
+    String? propertyType,
+    double? maxPrice,
+  }) async {
+    final String cityQuery = city?.trim() ?? '';
+    final String operationFilter = operationType?.trim().toLowerCase() ?? '';
+    final String typeFilter = propertyType?.trim().toLowerCase() ?? '';
+
+    var query = _client.from('properties').select(
+      'id, owner_id, title, description, address, city, price, operation_type, property_type, created_at',
+    );
+
+    if (cityQuery.isNotEmpty) {
+      query = query.ilike('city', '%$cityQuery%');
+    }
+
+    if (operationFilter.isNotEmpty && operationFilter != 'cualquiera') {
+      query = query.eq('operation_type', operationFilter);
+    }
+
+    if (typeFilter.isNotEmpty && typeFilter != 'cualquiera') {
+      query = query.eq('property_type', typeFilter);
+    }
+
+    if (maxPrice != null) {
+      query = query.lte('price', maxPrice);
+    }
+
+    final List<dynamic> response = await query.order(
+      'created_at',
+      ascending: false,
+    );
+
+    return response
+        .map((property) => Map<String, dynamic>.from(property as Map))
+        .toList();
+  }
+
   Future<void> createPropertyRequest({
     required String propertyId,
     required String ownerId,
