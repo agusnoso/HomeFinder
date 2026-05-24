@@ -34,7 +34,12 @@ class _SplashViewState extends State<SplashView> {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: const Color(0xFFD9D9D9)),
               ),
-              child: const Icon(Icons.home_rounded, size: 44, color: Color(0xFF2B2B2B)),
+              child: Image.asset(
+                'assets/images/logohomefinder.png',
+                width: 130,
+                height: 130,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(height: 20),
             const Text(

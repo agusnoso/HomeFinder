@@ -41,7 +41,9 @@ class _SignInViewState extends State<SignInView> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, introduzca email y contraseña')),
+        const SnackBar(
+          content: Text('Por favor, introduzca email y contraseña'),
+        ),
       );
       return;
     }
@@ -51,7 +53,10 @@ class _SignInViewState extends State<SignInView> {
     });
 
     try {
-      final profile = await _authService.signIn(email: email, password: password);
+      final profile = await _authService.signIn(
+        email: email,
+        password: password,
+      );
 
       if (!context.mounted) {
         return;
@@ -67,15 +72,17 @@ class _SignInViewState extends State<SignInView> {
       if (!context.mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error al iniciar sesión: ${error.message}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al iniciar sesión: ${error.message}')),
+      );
     } catch (_) {
       if (!context.mounted) {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se pudo iniciar sesión. Inténtalo de nuevo.')),
+        const SnackBar(
+          content: Text('No se pudo iniciar sesión. Inténtalo de nuevo.'),
+        ),
       );
     } finally {
       if (context.mounted) {
@@ -98,7 +105,12 @@ class _SignInViewState extends State<SignInView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.home_work_rounded, size: 54, color: Color(0xFF2B2B2B)),
+                Image.asset(
+                  'assets/images/logohomefinder.png',
+                  width: 130,
+                  height: 130,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   'Bienvenido a HomeFinder',
@@ -106,7 +118,10 @@ class _SignInViewState extends State<SignInView> {
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
-                const Text('Accede para continuar', style: TextStyle(color: Color(0xFF6B6B6B))),
+                const Text(
+                  'Accede para continuar',
+                  style: TextStyle(color: Color(0xFF6B6B6B)),
+                ),
                 const SizedBox(height: 32),
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -117,10 +132,7 @@ class _SignInViewState extends State<SignInView> {
                 const SizedBox(height: 16),
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Contraseña',
-                    style: TextStyle(fontSize: 17),
-                  ),
+                  child: Text('Contraseña', style: TextStyle(fontSize: 17)),
                 ),
                 const SizedBox(height: 8),
                 formWidgets.passwordField(
@@ -134,26 +146,27 @@ class _SignInViewState extends State<SignInView> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _onSignIn,
-                    
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.4,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+
+                    child:
+                        _isLoading
+                            ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.4,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                            : const Text(
+                              'Entrar',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          )
-                        : const Text(
-                            'Entrar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
