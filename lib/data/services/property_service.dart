@@ -81,6 +81,51 @@ class PropertyService {
         .toList();
   }
 
+  Future<void> updateProperty({
+    required String propertyId,
+    required String title,
+    required String description,
+    required String address,
+    required String city,
+    required double price,
+    required String operationType,
+    required String propertyType,
+  }) async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para editar una vivienda.');
+    }
+
+    await _client
+        .from('properties')
+        .update({
+          'title': title,
+          'description': description,
+          'address': address,
+          'city': city,
+          'price': price,
+          'operation_type': operationType,
+          'property_type': propertyType,
+        })
+        .eq('id', propertyId)
+        .eq('owner_id', currentUser.id);
+  }
+
+  Future<void> deleteProperty({required String propertyId}) async {
+    final User? currentUser = _client.auth.currentUser;
+
+    if (currentUser == null) {
+      throw AuthException('Debes iniciar sesión para eliminar una vivienda.');
+    }
+
+    await _client
+        .from('properties')
+        .delete()
+        .eq('id', propertyId)
+        .eq('owner_id', currentUser.id);
+  }
+
 
   Future<List<Map<String, dynamic>>> searchProperties({
     String? city,

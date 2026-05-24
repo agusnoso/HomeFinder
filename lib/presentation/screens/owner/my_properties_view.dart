@@ -10,12 +10,285 @@ class MyPropertiesView extends StatefulWidget {
 
 class _MyPropertiesViewState extends State<MyPropertiesView> {
   final PropertyService _propertyService = PropertyService();
-  late final Future<List<Map<String, dynamic>>> _myPropertiesFuture;
+  late Future<List<Map<String, dynamic>>> _myPropertiesFuture;
 
   @override
   void initState() {
     super.initState();
     _myPropertiesFuture = _propertyService.getMyProperties();
+  }
+
+  void _reloadProperties() {
+    setState(() {
+      _myPropertiesFuture = _propertyService.getMyProperties();
+    });
+  }
+
+  Future<void> _showEditPropertyDialog(Map<String, dynamic> property) async {
+    final formKey = GlobalKey<FormState>();
+    final titleController = TextEditingController(
+      text: (property['title'] as String?) ?? '',
+    );
+    final descriptionController = TextEditingController(
+      text: (property['description'] as String?) ?? '',
+    );
+    final addressController = TextEditingController(
+      text: (property['address'] as String?) ?? '',
+    );
+    final cityController = TextEditingController(
+      text: (property['city'] as String?) ?? '',
+    );
+    final priceController = TextEditingController(
+      text: property['price']?.toString() ?? '',
+    );
+
+    String operationType =
+        (property['operation_type'] as String?)?.trim().isNotEmpty == true
+        ? property['operation_type'] as String
+        : 'alquiler';
+    String propertyType =
+        (property['property_type'] as String?)?.trim().isNotEmpty == true
+        ? property['property_type'] as String
+        : 'piso';
+    bool isSubmitting = false;
+
+    final bool? updated = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Editar vivienda'),
+              content: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: titleController,
+                        decoration: const InputDecoration(labelText: 'Título'),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'El título es obligatorio';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: descriptionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Descripción',
+                        ),
+                        maxLines: 3,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'La descripción es obligatoria';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: addressController,
+                        decoration: const InputDecoration(
+                          labelText: 'Dirección',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'La dirección es obligatoria';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: cityController,
+                        decoration: const InputDecoration(labelText: 'Ciudad'),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'La ciudad es obligatoria';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        controller: priceController,
+                        decoration: const InputDecoration(labelText: 'Precio'),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'El precio es obligatorio';
+                          }
+                          final parsed = double.tryParse(value.trim());
+                          if (parsed == null) {
+                            return 'El precio debe ser numérico';
+                          }
+                          if (parsed <= 0) {
+                            return 'El precio debe ser mayor que 0';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        value: operationType,
+                        decoration: const InputDecoration(
+                          labelText: 'Tipo de operación',
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'alquiler',
+                            child: Text('Alquiler'),
+                          ),
+                          DropdownMenuItem(value: 'venta', child: Text('Venta')),
+                        ],
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setDialogState(() {
+                            operationType = value;
+                          });
+                        },
+                      ),
+                      DropdownButtonFormField<String>(
+                        value: propertyType,
+                        decoration: const InputDecoration(
+                          labelText: 'Tipo de vivienda',
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: 'piso', child: Text('Piso')),
+                          DropdownMenuItem(value: 'casa', child: Text('Casa')),
+                          DropdownMenuItem(
+                            value: 'estudio',
+                            child: Text('Estudio'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setDialogState(() {
+                            propertyType = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(false),
+                  child: const Text('Cancelar'),
+                ),
+                FilledButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          if (!formKey.currentState!.validate()) {
+                            return;
+                          }
+
+                          setDialogState(() {
+                            isSubmitting = true;
+                          });
+
+                          try {
+                            await _propertyService.updateProperty(
+                              propertyId: property['id'] as String,
+                              title: titleController.text.trim(),
+                              description: descriptionController.text.trim(),
+                              address: addressController.text.trim(),
+                              city: cityController.text.trim(),
+                              price: double.parse(priceController.text.trim()),
+                              operationType: operationType,
+                              propertyType: propertyType,
+                            );
+
+                            if (!mounted) return;
+                            Navigator.of(dialogContext).pop(true);
+                          } catch (_) {
+                            if (!mounted) return;
+                            setDialogState(() {
+                              isSubmitting = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'No se pudo actualizar la vivienda.',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Guardar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    titleController.dispose();
+    descriptionController.dispose();
+    addressController.dispose();
+    cityController.dispose();
+    priceController.dispose();
+
+    if (updated == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vivienda actualizada correctamente.')),
+      );
+      _reloadProperties();
+    }
+  }
+
+  Future<void> _confirmDeleteProperty(String propertyId) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Eliminar vivienda'),
+          content: const Text(
+            '¿Seguro que quieres eliminar esta vivienda? Esta acción no se puede deshacer.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await _propertyService.deleteProperty(propertyId: propertyId);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vivienda eliminada correctamente.')),
+      );
+      _reloadProperties();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No se pudo eliminar la vivienda.')));
+    }
   }
 
   String _formatPrice(dynamic value) {
@@ -123,6 +396,23 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
                         children: [
                           Chip(label: Text(operationType)),
                           Chip(label: Text(propertyType)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () => _showEditPropertyDialog(property),
+                            child: const Text('Editar'),
+                          ),
+                          const SizedBox(width: 8),
+                          FilledButton.tonal(
+                            onPressed: () => _confirmDeleteProperty(
+                              property['id'] as String,
+                            ),
+                            child: const Text('Eliminar'),
+                          ),
                         ],
                       ),
                     ],
