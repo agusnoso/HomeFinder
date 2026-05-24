@@ -89,7 +89,7 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Inicio de sesión'), centerTitle: true),
+      appBar: AppBar(title: const Text('Inicio de sesión')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -98,10 +98,15 @@ class _SignInViewState extends State<SignInView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const Icon(Icons.home_work_rounded, size: 54, color: Color(0xFF2B2B2B)),
+                const SizedBox(height: 16),
                 const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  'Bienvenido a HomeFinder',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                 ),
+                const SizedBox(height: 8),
+                const Text('Accede para continuar', style: TextStyle(color: Color(0xFF6B6B6B))),
                 const SizedBox(height: 32),
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -129,12 +134,7 @@ class _SignInViewState extends State<SignInView> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _onSignIn,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF353535),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                    
                     child: _isLoading
                         ? const SizedBox(
                             width: 22,

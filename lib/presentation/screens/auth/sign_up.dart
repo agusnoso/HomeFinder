@@ -89,7 +89,7 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registro'), centerTitle: true),
+      appBar: AppBar(title: const Text('Registro')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -98,10 +98,14 @@ class _SignUpViewState extends State<SignUpView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const Icon(Icons.person_add_alt_1_rounded, size: 52, color: Color(0xFF2B2B2B)),
+                const SizedBox(height: 16),
                 const Text(
                   'Crear cuenta',
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                 ),
+                const SizedBox(height: 8),
+                const Text('Regístrate para publicar o buscar viviendas', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF6B6B6B))),
 
                 const SizedBox(height: 32),
 
@@ -206,13 +210,7 @@ class _SignUpViewState extends State<SignUpView> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: _onSignUp,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF353535),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
+                                        child: const Text(
                       'Registrarse',
                       style: TextStyle(
                         color: Colors.white,
