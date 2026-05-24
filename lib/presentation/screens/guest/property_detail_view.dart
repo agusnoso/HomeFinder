@@ -26,6 +26,7 @@ class _PropertyDetailViewState extends State<PropertyDetailView> {
     final price = widget.property['price'];
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Detalle de vivienda'),
       ),

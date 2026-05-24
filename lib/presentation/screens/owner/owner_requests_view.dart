@@ -69,6 +69,7 @@ class _OwnerRequestsViewState extends State<OwnerRequestsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Solicitudes recibidas'),
         centerTitle: true,

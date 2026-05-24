@@ -303,6 +303,7 @@ class _MyPropertiesViewState extends State<MyPropertiesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Mis viviendas'), centerTitle: true),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _myPropertiesFuture,

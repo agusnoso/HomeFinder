@@ -136,6 +136,7 @@ class _PublishPropertyViewState extends State<PublishPropertyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Publicar vivienda'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),

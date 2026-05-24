@@ -31,6 +31,7 @@ class _SearchPropertiesViewState extends State<SearchPropertiesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Buscar viviendas')),
       body: SafeArea(
         child: Padding(

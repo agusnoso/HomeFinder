@@ -22,6 +22,7 @@ class _GuestRequestsViewState extends State<GuestRequestsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Mis solicitudes'), centerTitle: true),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _requestsFuture,
