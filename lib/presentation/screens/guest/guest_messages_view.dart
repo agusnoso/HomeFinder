@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/services/property_service.dart';
+import '../../../widgets/app_background.dart';
 
 class GuestMessagesView extends StatefulWidget {
   const GuestMessagesView({super.key});
@@ -23,9 +24,10 @@ class _GuestMessagesViewState extends State<GuestMessagesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Mensajes'), centerTitle: true),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _messagesFuture,
-        builder: (context, snapshot) {
+      body: AppBackground(
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _messagesFuture,
+          builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -143,7 +145,8 @@ class _GuestMessagesViewState extends State<GuestMessagesView> {
               );
             },
           );
-        },
+          },
+        ),
       ),
     );
   }
